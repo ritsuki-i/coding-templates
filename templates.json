@@ -1,0 +1,703 @@
+[
+  {
+    "id": "python-list-flatten",
+    "title": "入れ子のリストを平坦化",
+    "language": "Python",
+    "category": "アルゴリズム",
+    "useCase": "list",
+    "description": "二次元のリストを内包表記で結合し、一次元のリストへ変換する。",
+    "tags": [
+      "リスト",
+      "結合",
+      "内包表記"
+    ],
+    "code": "nested = [[1, 2], [3, 4], [5]]\nflat = [item for row in nested for item in row]\nprint(flat)"
+  },
+  {
+    "id": "python-dict-count",
+    "title": "要素の出現回数を数える",
+    "language": "Python",
+    "category": "アルゴリズム",
+    "useCase": "dict",
+    "description": "Counterを使ってリスト内の各要素の出現回数を集計する。",
+    "tags": [
+      "辞書",
+      "集計",
+      "Counter"
+    ],
+    "code": "from collections import Counter\n\nitems = [\"a\", \"b\", \"a\", \"c\", \"a\"]\ncounts = Counter(items)\nprint(counts.most_common())"
+  },
+  {
+    "id": "python-sort-key",
+    "title": "複数条件でリストをソート",
+    "language": "Python",
+    "category": "アルゴリズム",
+    "useCase": "sort",
+    "description": "辞書のリストをスコアの降順、名前の昇順という複数条件でソートする。",
+    "tags": [
+      "リスト",
+      "並び替え",
+      "lambda"
+    ],
+    "code": "users = [{\"name\": \"A\", \"score\": 80}, {\"name\": \"B\", \"score\": 95}]\nresult = sorted(users, key=lambda x: (-x[\"score\"], x[\"name\"]))"
+  },
+  {
+    "id": "pandas-read-csv",
+    "title": "CSVを読み込む",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "データ入出力",
+    "description": "pandasで文字コードと日付列を指定してCSVファイルをDataFrameへ読み込む。",
+    "tags": [
+      "pandas",
+      "CSV",
+      "DataFrame"
+    ],
+    "code": "import pandas as pd\n\ndf = pd.read_csv(\n    \"data.csv\",\n    encoding=\"utf-8\",\n    parse_dates=[\"date\"]\n)"
+  },
+  {
+    "id": "pandas-missing-values",
+    "title": "欠損値を補完する",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "データ前処理",
+    "description": "pandasで数値列の欠損値を中央値、カテゴリ列の欠損値を最頻値で補完する。",
+    "tags": [
+      "pandas",
+      "欠損値",
+      "クレンジング"
+    ],
+    "code": "df[\"age\"] = df[\"age\"].fillna(df[\"age\"].median())\ndf[\"category\"] = df[\"category\"].fillna(df[\"category\"].mode()[0])"
+  },
+  {
+    "id": "pandas-groupby",
+    "title": "グループ別に集計",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "集計",
+    "description": "pandasのgroupbyでカテゴリ別の売上合計と平均を集計する。",
+    "tags": [
+      "pandas",
+      "groupby",
+      "売上"
+    ],
+    "code": "summary = (\n    df.groupby(\"category\", as_index=False)\n      .agg(total_sales=(\"sales\", \"sum\"), avg_sales=(\"sales\", \"mean\"))\n)"
+  },
+  {
+    "id": "matplotlib-line",
+    "title": "折れ線グラフを描画",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "可視化",
+    "description": "matplotlibで凡例、軸ラベル、グリッド付きの折れ線グラフによるデータの可視化を行う。",
+    "tags": [
+      "matplotlib",
+      "グラフ",
+      "可視化"
+    ],
+    "code": "import matplotlib.pyplot as plt\n\nplt.plot(x, y, marker=\"o\", label=\"sales\")\nplt.xlabel(\"Date\")\nplt.ylabel(\"Sales\")\nplt.grid(alpha=0.3)\nplt.legend()\nplt.tight_layout()\nplt.show()"
+  },
+  {
+    "id": "python-regex-clean",
+    "title": "正規表現で文字列をクレンジング",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "データ前処理",
+    "description": "正規表現によりURLと余分な空白を除去してテキストデータをクレンジングする。",
+    "tags": [
+      "正規表現",
+      "re",
+      "テキスト",
+      "データクレンジング"
+    ],
+    "code": "import re\nimport unicodedata\n\ndef clean_text(text: str) -> str:\n    text = unicodedata.normalize(\"NFKC\", text)\n    text = text.strip()\n    text = re.sub(r\"[^0-9A-Za-zぁ-んァ-ヶ一-龥ー]\", \"\", text)\n    return text"
+  },
+  {
+    "id": "python-json-io",
+    "title": "JSONファイルを読み書き",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "データ入出力",
+    "description": "日本語を保持したままJSONファイルへ保存し、再度読み込む。",
+    "tags": [
+      "JSON",
+      "ファイル",
+      "保存"
+    ],
+    "code": "import json\n\nwith open(\"data.json\", \"w\", encoding=\"utf-8\") as f:\n    json.dump(data, f, ensure_ascii=False, indent=2)\n\nwith open(\"data.json\", encoding=\"utf-8\") as f:\n    data = json.load(f)"
+  },
+  {
+    "id": "python-api-request",
+    "title": "APIからJSONを取得",
+    "language": "Python",
+    "category": "Web",
+    "useCase": "API通信",
+    "description": "requestsでタイムアウトと例外処理を指定し、APIのJSONレスポンスを取得する。",
+    "tags": [
+      "requests",
+      "HTTP",
+      "JSON"
+    ],
+    "code": "import requests\n\nresponse = requests.get(\"https://api.example.com/items\", timeout=10)\nresponse.raise_for_status()\ndata = response.json()"
+  },
+  {
+    "id": "js-fetch",
+    "title": "Fetch APIでデータ取得",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "API通信",
+    "description": "fetchとasync/awaitでAPIからJSONデータを取得し、HTTPエラーを処理する。",
+    "tags": [
+      "fetch",
+      "HTTP",
+      "async"
+    ],
+    "code": "async function getItems() {\n  const response = await fetch(\"/api/items\");\n  if (!response.ok) throw new Error(`HTTP ${response.status}`);\n  return response.json();\n}"
+  },
+  {
+    "id": "js-array-group",
+    "title": "配列をキーごとにグループ化",
+    "language": "JavaScript",
+    "category": "アルゴリズム",
+    "useCase": "Array",
+    "description": "reduceを使い、オブジェクトの配列を指定したキーごとの配列に分類する。",
+    "tags": [
+      "配列",
+      "reduce",
+      "group"
+    ],
+    "code": "const grouped = items.reduce((result, item) => {\n  (result[item.category] ??= []).push(item);\n  return result;\n}, {});"
+  },
+  {
+    "id": "js-debounce",
+    "title": "入力処理をデバウンス",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "イベント処理",
+    "description": "連続する入力イベントを間引き、検索やAPI通信が最後の入力後に一度だけ動くようにする。",
+    "tags": [
+      "debounce",
+      "検索",
+      "イベント"
+    ],
+    "code": "function debounce(fn, delay = 300) {\n  let timer;\n  return (...args) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}"
+  },
+  {
+    "id": "sql-groupby",
+    "title": "月別の売上を集計",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "集計",
+    "description": "注文データを月別にまとめ、売上合計と注文数を集計する。",
+    "tags": [
+      "GROUP BY",
+      "売上",
+      "月次"
+    ],
+    "code": "SELECT\n  DATE_TRUNC('month', ordered_at) AS month,\n  SUM(amount) AS total_sales,\n  COUNT(*) AS order_count\nFROM orders\nGROUP BY 1\nORDER BY 1;"
+  },
+  {
+    "id": "sql-duplicates",
+    "title": "重複データを検出",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "データクレンジング",
+    "description": "GROUP BYとHAVINGを使って、メールアドレスが重複しているレコードを検出する。",
+    "tags": [
+      "重複",
+      "HAVING",
+      "クレンジング"
+    ],
+    "code": "SELECT email, COUNT(*) AS count\nFROM users\nGROUP BY email\nHAVING COUNT(*) > 1\nORDER BY count DESC;"
+  },
+  {
+    "id": "html-table",
+    "title": "アクセシブルなテーブル",
+    "language": "HTML",
+    "category": "Web",
+    "useCase": "UI",
+    "description": "見出しとキャプションを持つ基本的なテーブルを作成する。",
+    "tags": [
+      "table",
+      "アクセシビリティ",
+      "HTML"
+    ],
+    "code": "<table>\n  <caption>月別売上</caption>\n  <thead><tr><th scope=\"col\">月</th><th scope=\"col\">売上</th></tr></thead>\n  <tbody><tr><th scope=\"row\">1月</th><td>120,000</td></tr></tbody>\n</table>"
+  },
+  {
+    "id": "css-grid",
+    "title": "レスポンシブなカードグリッド",
+    "language": "CSS",
+    "category": "Web",
+    "useCase": "レイアウト",
+    "description": "画面幅に応じて列数が自動で変化するカード用CSSグリッドを作成する。",
+    "tags": [
+      "CSS Grid",
+      "レスポンシブ",
+      "カード"
+    ],
+    "code": ".card-grid {\n  display: grid;\n  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));\n  gap: 1rem;\n}"
+  },
+  {
+    "id": "bash-find-text",
+    "title": "ファイル内の文字列を検索",
+    "language": "Shell",
+    "category": "開発環境",
+    "useCase": "検索",
+    "description": "ripgrepを使って対象ディレクトリ以下のファイルから文字列を高速検索する。",
+    "tags": [
+      "rg",
+      "ripgrep",
+      "CLI"
+    ],
+    "code": "rg \"検索したい文字列\" ./src"
+  },
+  {
+    "id": "git-feature-branch",
+    "title": "作業ブランチを作成",
+    "language": "Git",
+    "category": "開発環境",
+    "useCase": "バージョン管理",
+    "description": "最新のmainから新しい作業ブランチを作成する基本コマンド。",
+    "tags": [
+      "Git",
+      "branch",
+      "main"
+    ],
+    "code": "git switch main\ngit pull --ff-only\ngit switch -c feature/my-change"
+  },
+  {
+    "id": "python-pytest-parametrize",
+    "title": "複数ケースをまとめてテスト",
+    "language": "Python",
+    "category": "テスト",
+    "useCase": "単体テスト",
+    "description": "pytestのparametrizeで入力値と期待値の複数パターンを一つのテストとして検証する。",
+    "tags": [
+      "pytest",
+      "parametrize",
+      "テスト"
+    ],
+    "code": "import pytest\n\n@pytest.mark.parametrize(\"value, expected\", [(2, 4), (3, 9), (-2, 4)])\ndef test_square(value, expected):\n    assert value ** 2 == expected"
+  },
+  {
+    "id": "python-list-deduplicate",
+    "title": "順序を保ってリストの重複を削除",
+    "language": "Python",
+    "category": "アルゴリズム",
+    "useCase": "list",
+    "description": "元の並び順を維持したまま、リストから重複する要素を削除する。",
+    "tags": ["リスト", "重複削除", "dict"],
+    "code": "items = [3, 1, 3, 2, 1]\nunique_items = list(dict.fromkeys(items))\nprint(unique_items)"
+  },
+  {
+    "id": "python-enumerate-zip",
+    "title": "複数リストを番号付きでループ",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "ループ",
+    "description": "enumerateとzipを使い、複数リストの要素を行番号付きで同時に処理する。",
+    "tags": ["enumerate", "zip", "for"],
+    "code": "names = [\"Alice\", \"Bob\"]\nscores = [90, 85]\n\nfor index, (name, score) in enumerate(zip(names, scores), start=1):\n    print(index, name, score)"
+  },
+  {
+    "id": "python-pathlib-files",
+    "title": "拡張子を指定してファイル一覧を取得",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "ファイル操作",
+    "description": "pathlibで対象フォルダ以下にある特定拡張子のファイルを再帰検索する。",
+    "tags": ["pathlib", "ファイル", "再帰検索"],
+    "code": "from pathlib import Path\n\nfiles = sorted(Path(\"data\").rglob(\"*.csv\"))\nfor file in files:\n    print(file)"
+  },
+  {
+    "id": "python-csv-dict-reader",
+    "title": "標準ライブラリでCSVを辞書として読む",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "データ入出力",
+    "description": "csv.DictReaderを使い、CSVの各行を列名付きの辞書として読み込む。",
+    "tags": ["CSV", "DictReader", "標準ライブラリ"],
+    "code": "import csv\n\nwith open(\"data.csv\", encoding=\"utf-8\", newline=\"\") as f:\n    rows = list(csv.DictReader(f))\n\nprint(rows)"
+  },
+  {
+    "id": "python-datetime-format",
+    "title": "文字列と日時を相互変換",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "日時処理",
+    "description": "datetimeで文字列を日時へ変換し、任意のフォーマットで文字列へ戻す。",
+    "tags": ["datetime", "日付", "フォーマット"],
+    "code": "from datetime import datetime\n\nvalue = datetime.strptime(\"2026-06-13 09:30\", \"%Y-%m-%d %H:%M\")\nformatted = value.strftime(\"%Y/%m/%d %H:%M\")"
+  },
+  {
+    "id": "python-logging-basic",
+    "title": "ログ出力を設定",
+    "language": "Python",
+    "category": "開発環境",
+    "useCase": "ログ",
+    "description": "loggingで日時、ログレベル、メッセージを標準出力へ記録する。",
+    "tags": ["logging", "デバッグ", "ログ"],
+    "code": "import logging\n\nlogging.basicConfig(\n    level=logging.INFO,\n    format=\"%(asctime)s %(levelname)s %(message)s\",\n)\nlogging.info(\"処理を開始します\")"
+  },
+  {
+    "id": "python-argparse",
+    "title": "コマンドライン引数を受け取る",
+    "language": "Python",
+    "category": "開発環境",
+    "useCase": "CLI",
+    "description": "argparseで必須の入力ファイルと任意の出力先をコマンドライン引数として受け取る。",
+    "tags": ["argparse", "CLI", "引数"],
+    "code": "import argparse\n\nparser = argparse.ArgumentParser()\nparser.add_argument(\"input\")\nparser.add_argument(\"--output\", default=\"result.json\")\nargs = parser.parse_args()\nprint(args.input, args.output)"
+  },
+  {
+    "id": "python-try-except",
+    "title": "例外を捕捉して後処理を行う",
+    "language": "Python",
+    "category": "基本操作",
+    "useCase": "例外処理",
+    "description": "try、except、else、finallyを使って例外処理と必須の後処理を記述する。",
+    "tags": ["例外", "try", "finally"],
+    "code": "try:\n    value = int(text)\nexcept ValueError as error:\n    print(f\"変換できません: {error}\")\nelse:\n    print(value)\nfinally:\n    print(\"処理終了\")"
+  },
+  {
+    "id": "pandas-filter-query",
+    "title": "複数条件で行を絞り込む",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "データ前処理",
+    "description": "pandasで数値条件とカテゴリ条件を組み合わせ、必要な行だけを抽出する。",
+    "tags": ["pandas", "filter", "query"],
+    "code": "filtered = df.loc[\n    (df[\"sales\"] >= 1000) & df[\"category\"].isin([\"A\", \"B\"])\n].copy()"
+  },
+  {
+    "id": "pandas-merge",
+    "title": "DataFrameをキーで結合",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "データ結合",
+    "description": "pandasのmergeで顧客IDをキーに二つのDataFrameを左外部結合する。",
+    "tags": ["pandas", "merge", "JOIN"],
+    "code": "result = orders.merge(\n    customers,\n    on=\"customer_id\",\n    how=\"left\",\n    validate=\"many_to_one\",\n)"
+  },
+  {
+    "id": "pandas-pivot-table",
+    "title": "ピボットテーブルを作成",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "集計",
+    "description": "pandasで月とカテゴリごとの売上合計をピボットテーブルに変換する。",
+    "tags": ["pandas", "pivot_table", "集計"],
+    "code": "pivot = pd.pivot_table(\n    df,\n    index=\"month\",\n    columns=\"category\",\n    values=\"sales\",\n    aggfunc=\"sum\",\n    fill_value=0,\n)"
+  },
+  {
+    "id": "pandas-datetime-resample",
+    "title": "時系列データを月単位で集計",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "時系列分析",
+    "description": "日付列をインデックスに設定し、売上データを月単位で再集計する。",
+    "tags": ["pandas", "resample", "時系列"],
+    "code": "monthly = (\n    df.assign(date=pd.to_datetime(df[\"date\"]))\n      .set_index(\"date\")[\"sales\"]\n      .resample(\"MS\")\n      .sum()\n)"
+  },
+  {
+    "id": "numpy-normalize",
+    "title": "配列を標準化",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "データ前処理",
+    "description": "NumPy配列を平均0、標準偏差1になるように標準化する。",
+    "tags": ["NumPy", "標準化", "配列"],
+    "code": "import numpy as np\n\nvalues = np.asarray(values, dtype=float)\nnormalized = (values - values.mean()) / values.std()"
+  },
+  {
+    "id": "seaborn-heatmap",
+    "title": "相関係数をヒートマップで可視化",
+    "language": "Python",
+    "category": "データ分析",
+    "useCase": "可視化",
+    "description": "数値列の相関係数を計算し、seabornのヒートマップで可視化する。",
+    "tags": ["seaborn", "相関", "ヒートマップ"],
+    "code": "import matplotlib.pyplot as plt\nimport seaborn as sns\n\ncorr = df.select_dtypes(\"number\").corr()\nsns.heatmap(corr, annot=True, cmap=\"coolwarm\", vmin=-1, vmax=1)\nplt.tight_layout()\nplt.show()"
+  },
+  {
+    "id": "sklearn-train-test-split",
+    "title": "学習用と評価用データに分割",
+    "language": "Python",
+    "category": "機械学習",
+    "useCase": "データ前処理",
+    "description": "scikit-learnで特徴量と目的変数を学習用、評価用に再現可能な形で分割する。",
+    "tags": ["scikit-learn", "train_test_split", "評価"],
+    "code": "from sklearn.model_selection import train_test_split\n\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)"
+  },
+  {
+    "id": "sklearn-pipeline",
+    "title": "前処理とモデルをPipeline化",
+    "language": "Python",
+    "category": "機械学習",
+    "useCase": "モデル構築",
+    "description": "欠損値補完、標準化、ロジスティック回帰を一つのPipelineとして構築する。",
+    "tags": ["scikit-learn", "Pipeline", "分類"],
+    "code": "from sklearn.impute import SimpleImputer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import StandardScaler\n\nmodel = make_pipeline(\n    SimpleImputer(strategy=\"median\"),\n    StandardScaler(),\n    LogisticRegression(max_iter=1000),\n)\nmodel.fit(X_train, y_train)"
+  },
+  {
+    "id": "sklearn-classification-report",
+    "title": "分類モデルを評価",
+    "language": "Python",
+    "category": "機械学習",
+    "useCase": "モデル評価",
+    "description": "分類モデルの適合率、再現率、F1スコアと混同行列を表示する。",
+    "tags": ["scikit-learn", "F1", "混同行列"],
+    "code": "from sklearn.metrics import classification_report, confusion_matrix\n\npredictions = model.predict(X_test)\nprint(classification_report(y_test, predictions))\nprint(confusion_matrix(y_test, predictions))"
+  },
+  {
+    "id": "nlp-word-frequency",
+    "title": "文章内の単語頻度を集計",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "テキスト分析",
+    "description": "正規表現で英単語を抽出し、文章内で頻出する単語を集計する。",
+    "tags": ["NLP", "単語頻度", "Counter"],
+    "code": "import re\nfrom collections import Counter\n\nwords = re.findall(r\"[A-Za-z]+\", text.lower())\nfrequencies = Counter(words)\nprint(frequencies.most_common(20))"
+  },
+  {
+    "id": "js-dom-create-list",
+    "title": "配列からDOMリストを生成",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "DOM操作",
+    "description": "配列の内容を安全にテキストとして設定し、DocumentFragment経由でリストへ追加する。",
+    "tags": ["DOM", "リスト", "DocumentFragment"],
+    "code": "const fragment = document.createDocumentFragment();\n\nfor (const item of items) {\n  const li = document.createElement(\"li\");\n  li.textContent = item.name;\n  fragment.append(li);\n}\n\ndocument.querySelector(\"#list\").replaceChildren(fragment);"
+  },
+  {
+    "id": "js-local-storage",
+    "title": "ローカルストレージにJSONを保存",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "データ保存",
+    "description": "オブジェクトをJSONへ変換してlocalStorageに保存し、初期値付きで読み込む。",
+    "tags": ["localStorage", "JSON", "保存"],
+    "code": "const STORAGE_KEY = \"app-settings\";\n\nlocalStorage.setItem(STORAGE_KEY, JSON.stringify(settings));\nconst saved = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? \"{}\");"
+  },
+  {
+    "id": "js-form-data",
+    "title": "フォーム入力値をオブジェクトに変換",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "フォーム",
+    "description": "FormDataを使ってフォームの入力値をキーと値のオブジェクトへ変換する。",
+    "tags": ["FormData", "フォーム", "Object"],
+    "code": "form.addEventListener(\"submit\", (event) => {\n  event.preventDefault();\n  const values = Object.fromEntries(new FormData(form));\n  console.log(values);\n});"
+  },
+  {
+    "id": "js-promise-parallel",
+    "title": "複数の非同期処理を並列実行",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "非同期処理",
+    "description": "Promise.allで独立した複数のAPI通信を並列実行し、すべての結果を待つ。",
+    "tags": ["Promise.all", "async", "並列"],
+    "code": "const [users, posts] = await Promise.all([\n  fetch(\"/api/users\").then((res) => res.json()),\n  fetch(\"/api/posts\").then((res) => res.json()),\n]);"
+  },
+  {
+    "id": "js-date-format",
+    "title": "日時を日本語形式で表示",
+    "language": "JavaScript",
+    "category": "Web",
+    "useCase": "日時処理",
+    "description": "Intl.DateTimeFormatで日時を日本向けの読みやすい形式へ変換する。",
+    "tags": ["Intl", "Date", "フォーマット"],
+    "code": "const formatter = new Intl.DateTimeFormat(\"ja-JP\", {\n  dateStyle: \"medium\",\n  timeStyle: \"short\",\n});\n\nconsole.log(formatter.format(new Date()));"
+  },
+  {
+    "id": "typescript-generic-api-response",
+    "title": "APIレスポンスの型を定義",
+    "language": "TypeScript",
+    "category": "Web",
+    "useCase": "型定義",
+    "description": "ジェネリクスを使って、さまざまなデータ型に対応できるAPIレスポンス型を定義する。",
+    "tags": ["TypeScript", "generics", "API"],
+    "code": "type ApiResponse<T> = {\n  data: T;\n  error: string | null;\n};\n\ntype User = { id: number; name: string };\nconst response: ApiResponse<User[]> = { data: [], error: null };"
+  },
+  {
+    "id": "sql-inner-join",
+    "title": "複数テーブルを内部結合",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "データ結合",
+    "description": "注文テーブルと顧客テーブルを顧客IDで内部結合し、必要な列を取得する。",
+    "tags": ["INNER JOIN", "結合", "SQL"],
+    "code": "SELECT\n  o.id AS order_id,\n  c.name AS customer_name,\n  o.amount\nFROM orders AS o\nINNER JOIN customers AS c ON c.id = o.customer_id;"
+  },
+  {
+    "id": "sql-window-ranking",
+    "title": "グループ内で順位を付ける",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "集計",
+    "description": "ウィンドウ関数を使い、カテゴリごとに売上が高い順で順位を付ける。",
+    "tags": ["RANK", "ウィンドウ関数", "ランキング"],
+    "code": "SELECT\n  category,\n  product_name,\n  sales,\n  RANK() OVER (PARTITION BY category ORDER BY sales DESC) AS sales_rank\nFROM products;"
+  },
+  {
+    "id": "sql-cte",
+    "title": "CTEで複雑な集計を分割",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "集計",
+    "description": "WITH句で月別売上を一時結果として定義し、平均以上の月だけを取得する。",
+    "tags": ["CTE", "WITH", "集計"],
+    "code": "WITH monthly_sales AS (\n  SELECT DATE_TRUNC('month', ordered_at) AS month, SUM(amount) AS total\n  FROM orders\n  GROUP BY 1\n)\nSELECT *\nFROM monthly_sales\nWHERE total >= (SELECT AVG(total) FROM monthly_sales)\nORDER BY month;"
+  },
+  {
+    "id": "sql-case-when",
+    "title": "条件に応じて値を分類",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "データ変換",
+    "description": "CASE式を使い、金額に応じて注文を複数のランクへ分類する。",
+    "tags": ["CASE", "条件分岐", "分類"],
+    "code": "SELECT\n  id,\n  amount,\n  CASE\n    WHEN amount >= 10000 THEN 'high'\n    WHEN amount >= 5000 THEN 'medium'\n    ELSE 'low'\n  END AS amount_rank\nFROM orders;"
+  },
+  {
+    "id": "sql-upsert-postgresql",
+    "title": "データを追加または更新",
+    "language": "SQL",
+    "category": "データベース",
+    "useCase": "データ更新",
+    "description": "PostgreSQLのON CONFLICTを使い、主キーが既に存在する場合は値を更新する。",
+    "tags": ["PostgreSQL", "UPSERT", "ON CONFLICT"],
+    "code": "INSERT INTO users (id, name, updated_at)\nVALUES (1, 'Alice', CURRENT_TIMESTAMP)\nON CONFLICT (id) DO UPDATE SET\n  name = EXCLUDED.name,\n  updated_at = EXCLUDED.updated_at;"
+  },
+  {
+    "id": "html-accessible-form",
+    "title": "ラベル付きの入力フォーム",
+    "language": "HTML",
+    "category": "Web",
+    "useCase": "フォーム",
+    "description": "label、入力制約、autocompleteを指定したアクセシブルな基本フォームを作成する。",
+    "tags": ["form", "アクセシビリティ", "validation"],
+    "code": "<form>\n  <label for=\"email\">メールアドレス</label>\n  <input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" required>\n  <button type=\"submit\">送信</button>\n</form>"
+  },
+  {
+    "id": "css-flex-center",
+    "title": "要素を上下左右中央に配置",
+    "language": "CSS",
+    "category": "Web",
+    "useCase": "レイアウト",
+    "description": "Flexboxを使い、コンテナ内の要素を水平方向と垂直方向の中央へ配置する。",
+    "tags": ["Flexbox", "中央寄せ", "レイアウト"],
+    "code": ".container {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  min-height: 100vh;\n}"
+  },
+  {
+    "id": "css-line-clamp",
+    "title": "長い文章を指定行数で省略",
+    "language": "CSS",
+    "category": "Web",
+    "useCase": "UI",
+    "description": "長いテキストを指定した行数で切り詰め、末尾を省略表示する。",
+    "tags": ["line-clamp", "省略", "テキスト"],
+    "code": ".description {\n  display: -webkit-box;\n  overflow: hidden;\n  -webkit-box-orient: vertical;\n  -webkit-line-clamp: 3;\n}"
+  },
+  {
+    "id": "git-interactive-rebase",
+    "title": "直近のコミット履歴を整理",
+    "language": "Git",
+    "category": "開発環境",
+    "useCase": "バージョン管理",
+    "description": "対話的rebaseで直近のコミットを並べ替え、統合、メッセージ変更する。",
+    "tags": ["Git", "rebase", "履歴整理"],
+    "code": "git rebase -i HEAD~3"
+  },
+  {
+    "id": "git-stash",
+    "title": "作業中の変更を一時退避",
+    "language": "Git",
+    "category": "開発環境",
+    "useCase": "バージョン管理",
+    "description": "未追跡ファイルを含む作業内容を名前付きで一時退避し、後から復元する。",
+    "tags": ["Git", "stash", "退避"],
+    "code": "git stash push -u -m \"作業中\"\ngit stash list\ngit stash pop"
+  },
+  {
+    "id": "shell-find-large-files",
+    "title": "容量の大きいファイルを検索",
+    "language": "Shell",
+    "category": "開発環境",
+    "useCase": "ファイル操作",
+    "description": "指定したディレクトリ以下から一定サイズを超えるファイルを検索する。",
+    "tags": ["find", "ファイルサイズ", "Linux"],
+    "code": "find . -type f -size +100M -print"
+  },
+  {
+    "id": "powershell-find-text",
+    "title": "PowerShellでファイル内を検索",
+    "language": "PowerShell",
+    "category": "開発環境",
+    "useCase": "検索",
+    "description": "PowerShellで対象フォルダ以下のファイルから指定文字列を再帰検索する。",
+    "tags": ["PowerShell", "Select-String", "検索"],
+    "code": "Get-ChildItem -Path . -Recurse -File |\n  Select-String -Pattern \"検索したい文字列\""
+  },
+  {
+    "id": "powershell-json",
+    "title": "PowerShellでJSONを読み書き",
+    "language": "PowerShell",
+    "category": "開発環境",
+    "useCase": "データ入出力",
+    "description": "PowerShellでJSONファイルを読み込み、編集した内容をUTF-8で保存する。",
+    "tags": ["PowerShell", "JSON", "ConvertFrom-Json"],
+    "code": "$data = Get-Content -Raw -Encoding UTF8 .\\data.json | ConvertFrom-Json\n$data.updated = Get-Date\n$data | ConvertTo-Json -Depth 10 | Set-Content -Encoding UTF8 .\\data.json"
+  },
+  {
+    "id": "dockerfile-python",
+    "title": "Pythonアプリ用Dockerfile",
+    "language": "Dockerfile",
+    "category": "インフラ",
+    "useCase": "コンテナ",
+    "description": "依存関係をインストールし、Pythonアプリを実行する基本的なDockerfile。",
+    "tags": ["Docker", "Python", "コンテナ"],
+    "code": "FROM python:3.12-slim\n\nWORKDIR /app\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\nCOPY . .\n\nCMD [\"python\", \"app.py\"]"
+  },
+  {
+    "id": "docker-compose-postgres",
+    "title": "PostgreSQLをDocker Composeで起動",
+    "language": "YAML",
+    "category": "インフラ",
+    "useCase": "データベース",
+    "description": "永続ボリュームとヘルスチェック付きのPostgreSQLコンテナを起動する。",
+    "tags": ["Docker Compose", "PostgreSQL", "YAML"],
+    "code": "services:\n  db:\n    image: postgres:17\n    environment:\n      POSTGRES_USER: app\n      POSTGRES_PASSWORD: password\n      POSTGRES_DB: app\n    ports:\n      - \"5432:5432\"\n    volumes:\n      - postgres-data:/var/lib/postgresql/data\n    healthcheck:\n      test: [\"CMD-SHELL\", \"pg_isready -U app\"]\n      interval: 5s\n      timeout: 5s\n      retries: 5\n\nvolumes:\n  postgres-data:"
+  },
+  {
+    "id": "github-actions-test",
+    "title": "GitHub Actionsでテストを実行",
+    "language": "YAML",
+    "category": "CI/CD",
+    "useCase": "自動テスト",
+    "description": "pushとプルリクエスト時にPython環境を構築し、pytestを実行する。",
+    "tags": ["GitHub Actions", "pytest", "CI"],
+    "code": "name: test\non: [push, pull_request]\n\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-python@v5\n        with:\n          python-version: \"3.12\"\n      - run: pip install -r requirements.txt\n      - run: pytest"
+  },
+  {
+    "id": "regex-email",
+    "title": "メールアドレス形式を簡易確認",
+    "language": "Regex",
+    "category": "データ処理",
+    "useCase": "入力検証",
+    "description": "一般的なメールアドレス形式かどうかを簡易的に確認する正規表現。",
+    "tags": ["正規表現", "メール", "バリデーション"],
+    "code": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+  },
+  {
+    "id": "regex-date",
+    "title": "YYYY-MM-DD形式の日付を抽出",
+    "language": "Regex",
+    "category": "データ処理",
+    "useCase": "文字列抽出",
+    "description": "文章内からYYYY-MM-DD形式の日付文字列を抽出する正規表現。",
+    "tags": ["正規表現", "日付", "抽出"],
+    "code": "\\b\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\\b"
+  }
+]

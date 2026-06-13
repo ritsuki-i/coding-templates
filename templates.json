@@ -699,5 +699,255 @@
     "description": "文章内からYYYY-MM-DD形式の日付文字列を抽出する正規表現。",
     "tags": ["正規表現", "日付", "抽出"],
     "code": "\\b\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])\\b"
+  },
+  {
+    "id": "nlp-normalize-space",
+    "title": "空白・改行・タブを正規化",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "データ前処理",
+    "description": "連続する半角・全角スペース、改行、タブを単一の半角スペースへ正規化する。",
+    "tags": ["NLP", "空白", "正規化", "クレンジング"],
+    "code": "import re\n\ndef normalize_space(text: str) -> str:\n    return re.sub(r\"\\s+\", \" \", text).strip()"
+  },
+  {
+    "id": "nlp-replace-numbers",
+    "title": "文章内の数字をプレースホルダーへ置換",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "データ前処理",
+    "description": "文章内に含まれる連続した数字を共通のNUMトークンへ置換する。",
+    "tags": ["NLP", "数字", "正規表現", "匿名化"],
+    "code": "import re\n\ndef replace_numbers(text: str) -> str:\n    return re.sub(r\"\\d+\", \"<NUM>\", text)\n\nprint(replace_numbers(\"料金は3000円です\"))"
+  },
+  {
+    "id": "nlp-clean-english",
+    "title": "英語テキストをクレンジング",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "データ前処理",
+    "description": "英語文章を小文字化し、英数字以外の記号と余分な空白を除去する。",
+    "tags": ["NLP", "英語", "小文字化", "クレンジング"],
+    "code": "import re\n\ndef clean_english(text: str) -> str:\n    text = text.lower()\n    text = re.sub(r\"[^a-z0-9\\s]\", \"\", text)\n    text = re.sub(r\"\\s+\", \" \", text)\n    return text.strip()"
+  },
+  {
+    "id": "nlp-char-ngram",
+    "title": "文字N-gramを作成",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "特徴量抽出",
+    "description": "日本語など空白区切りのない文章から、指定文字数の文字N-gram集合を作成する。",
+    "tags": ["NLP", "N-gram", "文字列", "特徴量"],
+    "code": "def get_char_ngram(text: str, n: int = 2) -> set[str]:\n    if n <= 0:\n        raise ValueError(\"n must be positive\")\n    if len(text) < n:\n        return set()\n    return {text[i:i + n] for i in range(len(text) - n + 1)}\n\nprint(get_char_ngram(\"パスワード\", 2))"
+  },
+  {
+    "id": "nlp-word-ngram",
+    "title": "単語N-gramを作成",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "特徴量抽出",
+    "description": "トークン列から連続する指定個数の単語をまとめたN-gramを作成する。",
+    "tags": ["NLP", "N-gram", "トークン", "特徴量"],
+    "code": "def get_word_ngram(tokens: list[str], n: int = 2) -> list[tuple[str, ...]]:\n    if n <= 0:\n        raise ValueError(\"n must be positive\")\n    if len(tokens) < n:\n        return []\n    return [tuple(tokens[i:i + n]) for i in range(len(tokens) - n + 1)]"
+  },
+  {
+    "id": "nlp-jaccard-similarity",
+    "title": "Jaccard類似度を計算",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似度計算",
+    "description": "二つの特徴量集合について、共通部分を和集合で割ったJaccard類似度を計算する。",
+    "tags": ["NLP", "Jaccard", "類似度", "集合"],
+    "code": "def jaccard_similarity(a: set[str], b: set[str]) -> float:\n    union = a | b\n    if not union:\n        return 0.0\n    return len(a & b) / len(union)"
+  },
+  {
+    "id": "nlp-dice-similarity",
+    "title": "Dice係数を計算",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似度計算",
+    "description": "二つの特徴量集合の共通部分を強く評価するDice係数を計算する。",
+    "tags": ["NLP", "Dice係数", "類似度", "集合"],
+    "code": "def dice_similarity(a: set[str], b: set[str]) -> float:\n    denominator = len(a) + len(b)\n    if denominator == 0:\n        return 0.0\n    return 2 * len(a & b) / denominator"
+  },
+  {
+    "id": "nlp-cosine-counter",
+    "title": "頻度辞書のCosine類似度を計算",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似度計算",
+    "description": "Counterで表現した二つの文章ベクトル間のCosine類似度を標準ライブラリだけで計算する。",
+    "tags": ["NLP", "Cosine類似度", "Counter", "ベクトル"],
+    "code": "import math\nfrom collections import Counter\n\ndef cosine_similarity_counter(a: Counter, b: Counter) -> float:\n    common = a.keys() & b.keys()\n    dot = sum(a[word] * b[word] for word in common)\n    norm_a = math.sqrt(sum(value ** 2 for value in a.values()))\n    norm_b = math.sqrt(sum(value ** 2 for value in b.values()))\n    if norm_a == 0 or norm_b == 0:\n        return 0.0\n    return dot / (norm_a * norm_b)"
+  },
+  {
+    "id": "nlp-tfidf-basic",
+    "title": "文章をTF-IDFベクトル化",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "特徴量抽出",
+    "description": "scikit-learnのTfidfVectorizerで文章集合をTF-IDF特徴量へ変換する。",
+    "tags": ["NLP", "TF-IDF", "scikit-learn", "ベクトル化"],
+    "code": "from sklearn.feature_extraction.text import TfidfVectorizer\n\ndocs = [\"I love NLP\", \"NLP is fun\", \"I love pizza\"]\nvectorizer = TfidfVectorizer(stop_words=\"english\")\nX = vectorizer.fit_transform(docs)\n\nprint(vectorizer.get_feature_names_out())\nprint(X.toarray())"
+  },
+  {
+    "id": "nlp-char-ngram-tfidf",
+    "title": "日本語文章を文字N-gram TF-IDF化",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "特徴量抽出",
+    "description": "形態素解析を使わず、日本語文章を文字Bi-gramとTri-gramのTF-IDF特徴量へ変換する。",
+    "tags": ["NLP", "TF-IDF", "文字N-gram", "日本語"],
+    "code": "from sklearn.feature_extraction.text import TfidfVectorizer\n\nvectorizer = TfidfVectorizer(\n    analyzer=\"char\",\n    ngram_range=(2, 3),\n    min_df=1,\n)\nX = vectorizer.fit_transform(docs)"
+  },
+  {
+    "id": "nlp-tfidf-similarity-search",
+    "title": "TF-IDFとCosine類似度で文章検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似文検索",
+    "description": "文章集合と検索クエリをTF-IDF化し、Cosine類似度が最も高い文章を取得する。",
+    "tags": ["NLP", "TF-IDF", "Cosine類似度", "検索"],
+    "code": "import numpy as np\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndef search_by_tfidf(docs: list[str], query: str) -> tuple[int, float]:\n    vectorizer = TfidfVectorizer(analyzer=\"char\", ngram_range=(2, 3))\n    X = vectorizer.fit_transform([*docs, query])\n    similarities = cosine_similarity(X[:-1], X[-1]).ravel()\n    best_index = int(np.argmax(similarities))\n    return best_index, float(similarities[best_index])"
+  },
+  {
+    "id": "nlp-faq-jaccard-top-k",
+    "title": "文字N-gramとJaccardでFAQ検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "FAQ検索",
+    "description": "質問文をクレンジングして文字N-gram化し、Jaccard類似度が高いFAQ上位k件を返す。",
+    "tags": ["NLP", "FAQ", "Jaccard", "ランキング"],
+    "code": "def search_top_k_faq(df, user_query: str, k: int = 3):\n    query_features = get_char_ngram(clean_text(user_query), n=2)\n\n    result = df.copy()\n    result[\"features\"] = result[\"question\"].apply(\n        lambda text: get_char_ngram(clean_text(text), n=2)\n    )\n    result[\"similarity\"] = result[\"features\"].apply(\n        lambda features: jaccard_similarity(features, query_features)\n    )\n    return result.sort_values(\"similarity\", ascending=False).head(k)"
+  },
+  {
+    "id": "nlp-faq-threshold",
+    "title": "類似度閾値付きFAQ検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "FAQ検索",
+    "description": "最も近いFAQの類似度が閾値未満の場合、誤回答を避けて該当なしを返す。",
+    "tags": ["NLP", "FAQ", "閾値", "フォールバック"],
+    "code": "def search_faq_with_threshold(df, query: str, threshold: float = 0.1) -> dict:\n    best = search_top_k_faq(df, query, k=1).iloc[0]\n    score = float(best[\"similarity\"])\n\n    if score < threshold:\n        return {\"answer\": \"該当するFAQが見つかりませんでした。\", \"similarity\": score}\n    return {\"answer\": best[\"answer\"], \"similarity\": score}"
+  },
+  {
+    "id": "nlp-faq-tfidf",
+    "title": "文字N-gram TF-IDFでFAQ検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "FAQ検索",
+    "description": "日本語FAQを文字N-gram TF-IDF化し、Cosine類似度が最大の質問と回答を返す。",
+    "tags": ["NLP", "FAQ", "TF-IDF", "Cosine類似度"],
+    "code": "import numpy as np\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.metrics.pairwise import cosine_similarity\n\ndef search_faq_tfidf(df, query: str) -> dict:\n    vectorizer = TfidfVectorizer(analyzer=\"char\", ngram_range=(2, 3))\n    X = vectorizer.fit_transform([*df[\"question\"].tolist(), query])\n    similarities = cosine_similarity(X[:-1], X[-1]).ravel()\n    index = int(np.argmax(similarities))\n    row = df.iloc[index]\n    return {\"question\": row[\"question\"], \"answer\": row[\"answer\"], \"similarity\": float(similarities[index])}"
+  },
+  {
+    "id": "nlp-text-classification",
+    "title": "TF-IDFでテキスト分類モデルを構築",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "テキスト分類",
+    "description": "文字N-gram TF-IDFとロジスティック回帰をPipeline化し、文章の分類モデルを学習する。",
+    "tags": ["NLP", "テキスト分類", "TF-IDF", "ロジスティック回帰"],
+    "code": "from sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.pipeline import make_pipeline\n\nmodel = make_pipeline(\n    TfidfVectorizer(analyzer=\"char\", ngram_range=(2, 3)),\n    LogisticRegression(max_iter=1000),\n)\nmodel.fit(train_texts, train_labels)\npredictions = model.predict(test_texts)"
+  },
+  {
+    "id": "nlp-predict-with-probability",
+    "title": "テキスト分類結果を確率付きで推論",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "テキスト分類",
+    "description": "学習済みの分類モデルから予測ラベルと最大予測確率を取得する。",
+    "tags": ["NLP", "テキスト分類", "予測確率", "推論"],
+    "code": "def predict_text_with_probability(model, text: str) -> tuple[str, float]:\n    label = model.predict([text])[0]\n    probability = float(model.predict_proba([text]).max())\n    return label, probability"
+  },
+  {
+    "id": "nlp-edit-distance",
+    "title": "Levenshtein編集距離を計算",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似度計算",
+    "description": "動的計画法で二つの文字列間に必要な挿入、削除、置換の最小回数を計算する。",
+    "tags": ["NLP", "編集距離", "Levenshtein", "動的計画法"],
+    "code": "def edit_distance(source: str, target: str) -> int:\n    previous = list(range(len(target) + 1))\n\n    for i, source_char in enumerate(source, start=1):\n        current = [i]\n        for j, target_char in enumerate(target, start=1):\n            current.append(min(\n                previous[j] + 1,\n                current[j - 1] + 1,\n                previous[j - 1] + (source_char != target_char),\n            ))\n        previous = current\n    return previous[-1]"
+  },
+  {
+    "id": "nlp-edit-similarity",
+    "title": "編集距離を類似度へ変換",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似度計算",
+    "description": "Levenshtein編集距離を文字列長で正規化し、0から1の類似度へ変換する。",
+    "tags": ["NLP", "編集距離", "類似度", "正規化"],
+    "code": "def edit_similarity(source: str, target: str) -> float:\n    max_length = max(len(source), len(target))\n    if max_length == 0:\n        return 1.0\n    return 1 - edit_distance(source, target) / max_length"
+  },
+  {
+    "id": "nlp-extract-tfidf-keywords",
+    "title": "TF-IDFスコア上位のキーワードを抽出",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "キーワード抽出",
+    "description": "文章ごとにTF-IDFスコアが高い単語をキーワード候補として上位k件抽出する。",
+    "tags": ["NLP", "キーワード抽出", "TF-IDF", "ランキング"],
+    "code": "import numpy as np\nfrom sklearn.feature_extraction.text import TfidfVectorizer\n\ndef extract_top_tfidf_words(docs: list[str], k: int = 5):\n    vectorizer = TfidfVectorizer()\n    X = vectorizer.fit_transform(docs)\n    words = vectorizer.get_feature_names_out()\n    results = []\n    for row in X.toarray():\n        indices = np.argsort(row)[::-1][:k]\n        results.append([(words[i], float(row[i])) for i in indices if row[i] > 0])\n    return results"
+  },
+  {
+    "id": "nlp-find-similar-pairs",
+    "title": "類似する文章ペアを検出",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "重複検出",
+    "description": "文字N-gramのJaccard類似度を全文章ペアで計算し、閾値以上の重複候補を抽出する。",
+    "tags": ["NLP", "重複検出", "Jaccard", "類似文"],
+    "code": "def find_similar_pairs(texts: list[str], threshold: float = 0.5) -> list[dict]:\n    features = [get_char_ngram(clean_text(text), n=2) for text in texts]\n    pairs = []\n    for i in range(len(texts)):\n        for j in range(i + 1, len(texts)):\n            score = jaccard_similarity(features[i], features[j])\n            if score >= threshold:\n                pairs.append({\"i\": i, \"j\": j, \"score\": score})\n    return pairs"
+  },
+  {
+    "id": "nlp-keyword-and-or-search",
+    "title": "複数キーワードでAND・OR検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "キーワード検索",
+    "description": "文章集合から、すべてのキーワードを含む文章またはいずれかを含む文章を検索する。",
+    "tags": ["NLP", "キーワード検索", "AND検索", "OR検索"],
+    "code": "def and_search(docs: list[str], keywords: list[str]) -> list[str]:\n    return [doc for doc in docs if all(word in doc for word in keywords)]\n\ndef or_search(docs: list[str], keywords: list[str]) -> list[str]:\n    return [doc for doc in docs if any(word in doc for word in keywords)]"
+  },
+  {
+    "id": "nlp-top-k-accuracy",
+    "title": "検索ランキングのTop-k正解率を計算",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "検索評価",
+    "description": "正解文書が検索結果の上位k件以内に含まれる割合を計算し、FAQ検索などを評価する。",
+    "tags": ["NLP", "Top-k accuracy", "検索評価", "ランキング"],
+    "code": "def top_k_accuracy(\n    true_indices: list[int],\n    ranked_indices_list: list[list[int]],\n    k: int = 3,\n) -> float:\n    if not true_indices:\n        return 0.0\n    correct = sum(\n        true_index in ranked_indices[:k]\n        for true_index, ranked_indices in zip(true_indices, ranked_indices_list)\n    )\n    return correct / len(true_indices)"
+  },
+  {
+    "id": "nlp-mecab-tokenize",
+    "title": "MeCabで日本語を形態素解析",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "トークン化",
+    "description": "fugashi経由でMeCabを利用し、日本語文章を表層形と品詞を持つトークンへ分割する。",
+    "tags": ["NLP", "MeCab", "fugashi", "形態素解析"],
+    "code": "from fugashi import Tagger\n\ntagger = Tagger()\ntokens = [\n    {\"surface\": word.surface, \"pos\": word.feature.pos1}\n    for word in tagger(text)\n]\nprint(tokens)"
+  },
+  {
+    "id": "nlp-sentence-transformers-search",
+    "title": "文埋め込みで意味的類似文を検索",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "類似文検索",
+    "description": "Sentence Transformersで文章をベクトル化し、表現が異なっても意味が近い文章を検索する。",
+    "tags": ["NLP", "Sentence-BERT", "文埋め込み", "Semantic Search"],
+    "code": "from sentence_transformers import SentenceTransformer, util\n\nmodel = SentenceTransformer(\"sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2\")\ndoc_vectors = model.encode(docs, convert_to_tensor=True, normalize_embeddings=True)\nquery_vector = model.encode(query, convert_to_tensor=True, normalize_embeddings=True)\nscores = util.cos_sim(query_vector, doc_vectors)[0]\nbest_index = int(scores.argmax())\nprint(docs[best_index], float(scores[best_index]))"
+  },
+  {
+    "id": "nlp-faq-search-complete",
+    "title": "日本語FAQ検索の一式",
+    "language": "Python",
+    "category": "自然言語処理",
+    "useCase": "FAQ検索",
+    "description": "日本語の正規化、文字N-gram化、Jaccard類似度計算、Top-kランキングをまとめたFAQ検索テンプレート。",
+    "tags": ["NLP", "FAQ", "日本語", "ライブコーディング"],
+    "code": "import re\nimport unicodedata\nimport pandas as pd\n\ndef clean_text(text: str) -> str:\n    text = unicodedata.normalize(\"NFKC\", text).strip()\n    return re.sub(r\"[^0-9A-Za-zぁ-んァ-ヶ一-龥ー]\", \"\", text)\n\ndef get_char_ngram(text: str, n: int = 2) -> set[str]:\n    return {text[i:i + n] for i in range(len(text) - n + 1)} if len(text) >= n else set()\n\ndef jaccard_similarity(a: set[str], b: set[str]) -> float:\n    return len(a & b) / len(a | b) if a | b else 0.0\n\ndef search_faq(df: pd.DataFrame, query: str, k: int = 3) -> pd.DataFrame:\n    query_features = get_char_ngram(clean_text(query))\n    result = df.copy()\n    result[\"similarity\"] = result[\"question\"].apply(\n        lambda text: jaccard_similarity(get_char_ngram(clean_text(text)), query_features)\n    )\n    return result.sort_values(\"similarity\", ascending=False).head(k)"
   }
 ]
